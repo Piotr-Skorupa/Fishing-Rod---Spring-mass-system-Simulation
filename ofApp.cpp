@@ -22,6 +22,10 @@ void ofApp::setup(){
 	island.setRotation(1, -5, 0, 1, 0);
 	island.setScale(100.0, 100.0, 100.0);
 	island.setPosition(1600.0, -100.0, 5000.0);
+
+	// screen message
+	msg = "Author: Piotr Skorupa \nTo fullscreen press 'F' \nTo To start simulation press 'KEY_DOWN' \nTo exit press 'Esc'";
+	msg += "\n\nfps: " + ofToString(ofGetFrameRate(), 2);
 }
 
 //--------------------------------------------------------------
@@ -39,6 +43,8 @@ void ofApp::draw(){
 	boat.drawFaces();
 	ofPopMatrix();
 	camera.end();
+	ofSetColor(255);
+	ofDrawBitmapStringHighlight(msg, 10, 20);
 }
 
 //--------------------------------------------------------------

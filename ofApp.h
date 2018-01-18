@@ -36,5 +36,6 @@ class ofApp : public ofBaseApp{
 		ofVec3f lightVec;
 		ofxAssimpModelLoader island;
 		ofxAssimpModelLoader boat;
+		std::string msg;
 		
 };

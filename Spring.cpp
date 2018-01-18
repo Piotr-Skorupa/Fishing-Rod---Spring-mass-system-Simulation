@@ -10,12 +10,14 @@ Spring::Spring()
 	start_position_begin = position_begin;
 	start_position_end = position_end;
 	spring_color = ofColor(255,185,0); 
+	length = calculate_length();
+	start_length = length;
+
+	
+
+	
 }
 
-
-Spring::~Spring()
-{
-}
 
 Spring::Spring(Point first, Point second) 
 {
@@ -24,8 +26,13 @@ Spring::Spring(Point first, Point second)
 	start_position_begin = position_begin;
 	start_position_end = position_end;
 	spring_color = ofColor(255, 185, 0);
+	
 }
 
+Spring::~Spring()
+{
+
+}
 
 void Spring::draw()
 {
@@ -78,3 +85,7 @@ void Spring::tensioning(ofVec3f vec)
 }
 
 
+float Spring::calculate_length()
+{
+	return position_begin.distance(position_end);
+}

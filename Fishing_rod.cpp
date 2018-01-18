@@ -15,6 +15,16 @@ Fishing_rod::Fishing_rod()
 		lines.push_back(Spring(starting_points[i], ending_points[i]));
 	}
 
+	//tworzenie handlerow
+
+	handling_point = starting_points[0] + Point(0.0, -50.0, 0.0);
+	handlers.emplace_back(handling_point, starting_points[0]);
+	for (auto i = ending_points.begin(); i != ending_points.end(); i++)
+	{
+		handlers.emplace_back(Spring(handling_point, *i));
+	}
+
+	//koniec wedki i koniec zylki
 	end_of_rod = ending_points.back();
 	end_of_vein = end_of_rod + Point(0.0, -150.0, 0.0);
 	// utworzenie zylki
@@ -29,7 +39,12 @@ Fishing_rod::~Fishing_rod()
 }
 
 void Fishing_rod::draw() {
+
 	for (auto &l : lines) {
+		l.draw();
+	}
+	for (auto &l : handlers) {
+		l.change_color(true);
 		l.draw();
 	}
 	vein.draw();

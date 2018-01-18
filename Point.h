@@ -4,6 +4,11 @@
 class Point
 {
 	ofVec3f position;
+	ofVec3f velocity;
+	ofVec3f force; //sila po angielsku ?
+	bool is_moving;
+	float dt;
+
 public:
 
 	Point();
@@ -13,5 +18,6 @@ public:
 
 	ofVec3f pos();
 	ofVec3f operator+ (Point that);
+	void update_euler_method();
 };
 

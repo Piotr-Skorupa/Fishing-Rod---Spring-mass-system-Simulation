@@ -15,6 +15,9 @@ class Fishing_rod
 	std::vector<Point> starting_points;
 	std::vector<Point> ending_points;
 	std::vector<Spring> lines;
+	Point handling_point;					// punkt do trzymania wedki w stanie rownowagi (sztywnosc wedki)
+	std::vector<Spring> handlers;			// springi do polaczenia handler_pointa z punktami
+
 public:
 	Fishing_rod();
 	~Fishing_rod();
