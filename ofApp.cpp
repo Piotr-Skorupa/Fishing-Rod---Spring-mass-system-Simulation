@@ -30,7 +30,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+	rod.update_tension(goldfish);
 }
 
 //--------------------------------------------------------------
@@ -56,7 +56,10 @@ void ofApp::keyPressed(int key){
 	case OF_KEY_DOWN:
 		// next fish on rod
 		// play sonund of changing
-		// write on screen the name of fish		
+		// write on screen the name of fish	
+		
+		rod.tension();
+		//rod.update();
 		break;
 	}
 

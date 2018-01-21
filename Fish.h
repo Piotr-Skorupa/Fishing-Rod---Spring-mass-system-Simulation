@@ -9,6 +9,7 @@ class Fish
 {
 	ofxAssimpModelLoader model;
 	float mass;
+	Point p;
 public:
 	Fish();
 	~Fish();
@@ -16,5 +17,6 @@ public:
 	void draw();
 	void set_mass(float _mass);
 	float get_mass();
+	void update_pos(Point p);
 };
 

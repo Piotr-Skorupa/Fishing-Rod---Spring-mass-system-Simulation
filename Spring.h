@@ -15,12 +15,13 @@ class Spring
 public:
 	Spring();
 	Spring(Point first, Point second);
+	Spring(Point* first, Point * second);
 	~Spring();
 	void draw();
-	void tensioning(ofVec3f vec);
 	void change_color(bool _if);
 	void update_position(Point first, Point second);
 	void update_position(ofVec3f first, ofVec3f second);
 	float calculate_length();
+	float get_length();
 };
 
