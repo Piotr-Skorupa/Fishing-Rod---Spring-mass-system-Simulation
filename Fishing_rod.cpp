@@ -5,12 +5,12 @@
 Fishing_rod::Fishing_rod()
 {
 	counter = 0;
+	// points for rod
 	for (auto i = 0; i < LENGTH_OF_ROD; i += 25)
 	{
 		points.push_back(Point(i, i, i));
 	}
-	
-	
+	// pointers to points for rod --> this will simplify drwing of rod
 	for (auto i = 0; i < points.size(); i ++)
 	{
 		if (i == 0) {
@@ -28,39 +28,58 @@ Fishing_rod::Fishing_rod()
 			ending_points.push_back(std::move(p1));
 		}
 	}
-	std::cout <<points.size() << std::endl;
 	
+	// buliding rod with springs
 	for (auto i = 0; i < ending_points.size(); i++) {
 		lines.push_back(Spring(starting_points[i], ending_points[i]));
 	}
+	
 
-	//tworzenie handlerow
+	//creating points for fishing vein
+	Point end_of_rod = *ending_points.back();
+	Point middle_of_vein = end_of_rod + Point(0.0, -25.0, 0.0);
+	Point middle_of_vein2 = end_of_rod + Point(0.0, -50.0, 0.0);
+	Point middle_of_vein3 = end_of_rod + Point(0.0, -75.0, 0.0);
+	Point middle_of_vein4 = end_of_rod + Point(0.0, -100.0, 0.0);
+	Point middle_of_vein5 = end_of_rod + Point(0.0, -125.0, 0.0);
+	Point end_of_vein = end_of_rod + Point(0.0, -150.0, 0.0);
+	// pushing points to std::vector
+	points_for_vein.push_back(end_of_rod);
+	points_for_vein.push_back(middle_of_vein);
+	points_for_vein.push_back(middle_of_vein2);
+	points_for_vein.push_back(middle_of_vein3);
+	points_for_vein.push_back(middle_of_vein4);
+	points_for_vein.push_back(middle_of_vein5);
+	points_for_vein.push_back(end_of_vein);
 
-	handling_point = *starting_points[0] + Point(0.0, -50.0, 0.0);
-	handlers.emplace_back(Spring(handling_point, *starting_points[0]));
-	for (auto i = points.begin(); i != points.end(); i++)
-	{
-		handlers.emplace_back(Spring(handling_point, *i));
+	// creating Springs for vein
+	vein.push_back(Spring(points_for_vein[0], points_for_vein[1]));
+	vein.push_back(Spring(points_for_vein[1], points_for_vein[2]));
+	vein.push_back(Spring(points_for_vein[2], points_for_vein[3]));
+	vein.push_back(Spring(points_for_vein[3], points_for_vein[4]));
+	vein.push_back(Spring(points_for_vein[4], points_for_vein[5]));
+	vein.push_back(Spring(points_for_vein[5], points_for_vein[6]));
+
+	for (auto &v : vein) {
+		v.change_color(true);
 	}
-
-	//koniec wedki i koniec zylki
-	end_of_rod = *ending_points.back();
-	end_of_vein = end_of_rod + Point(0.0, -150.0, 0.0);
-	// utworzenie zylki
-	vein = Spring(end_of_rod, end_of_vein);
-	vein.change_color(true);
-	std::cout << ending_points.size() << ", " << starting_points.size();
 	
 	for (auto &p : ending_points)
 	{
-		p->set_movement(true);
+		p->set_movement(false);
 	}
 	for (auto &p : starting_points)
 	{
-		p->set_movement(true);
+		p->set_movement(false);
 	}
-	starting_points[0]->set_movement(false); // pierwszy punkt nieruchomy
-
+	
+	points.back().set_mass(100.0);
+	points_for_vein[0].set_movement(false);
+	for (auto i = 1; i < points_for_vein.size(); i++)
+	{
+		points_for_vein[i].set_movement(true);
+	}
+	
 	
 }
 
@@ -76,80 +95,77 @@ void Fishing_rod::draw() {
 	for (auto &l : lines) {
 		l.draw();
 	}
-	for (auto &l : handlers) {
-		l.change_color(true);
-		l.draw();
+	
+	for (auto &v : vein) {
+		v.draw();
 	}
-	vein.draw();
+	
 }
 
 Point Fishing_rod::get_hook_point()
 {
-	return end_of_vein;
+	return points_for_vein.back();
 }
 
 void Fishing_rod::update_tension(Fish &fish)
 {
+	
 	this->refresh_pointers();
+	
+	std::cout << points.back().pos().x << std::endl;
+	
+	for (auto &p : points_for_vein) {
+		p.set_mass(fish.get_mass());
+	}
+	// gravity
+	for (auto &p : points_for_vein) {
+		ofVec3f gravity_force = { 0, -p.get_mass()*G, 0 };
+		p.set_gravity_force(gravity_force);
+		//p.set_forces_to_zero();
+	}
 
-	for (auto i = 0; i < ending_points.size(); i++) {
-		
-		for (auto i = 0; i < ending_points.size(); i++) {
-			starting_points[i]->set_forces_to_zero();
-			ending_points[i]->set_forces_to_zero();
-		}
+	for (auto i = 0; i < vein.size(); i++) {
+		float distance = points_for_vein[i].pos().distance(points_for_vein[i + 1].pos());
 
-
-		float distance = starting_points[i]->pos().distance(ending_points[i]->pos());
 		if (distance != 0)
 		{
+			points_for_vein[i].set_velocity();
+			points_for_vein[i + 1].set_velocity();
 
-				starting_points[i]->set_velocity();
-				ending_points[i]->set_velocity();
-				ofVec3f diff_v = starting_points[i]->get_v() - ending_points[i]->get_v();
-				ofVec3f diff_pos = starting_points[i]->pos() - ending_points[i]->pos();
-				
-				//sily
-				ofVec3f f = (distance - lines[i].get_length()) * KS + (diff_v * diff_pos) * KD / distance;
-				ofVec3f F = f * (diff_pos / distance);
-				ofVec3f F2 = F * (-1, -1, -1);
+			ofVec3f diff_v = points_for_vein[i].get_v() - points_for_vein[i + 1].get_v();
+			ofVec3f diff_pos = points_for_vein[i].pos() - points_for_vein[i + 1].pos();
 
-				starting_points[i]->set_force(-F);
-				ending_points[i]->set_force(F);
-				
-				
+			//sily
+			ofVec3f f = (distance - vein[i].get_length()) * KS + (diff_v * diff_pos) * KD / distance;
+			ofVec3f F = f * (diff_pos / distance);
+
+			points_for_vein[i].set_force(-F);
+			points_for_vein[i + 1].set_force(F);
+
 		}
-
+	}
 		if (counter < 2) {
-			starting_points[i]->update_euler_method();
-			ending_points[i]->update_euler_method();
+			for (auto &p : points_for_vein)
+				p.update_euler_method();
 			counter++;
 		}
 		else
 		{
-			starting_points[i]->update_verlet_method();
-			ending_points[i]->update_verlet_method();
+			for (auto &p : points_for_vein)
+				p.update_verlet_method();
 		}
 
-			
-	}
 
-	
+	/*
 	for (auto i = 0; i < ending_points.size(); i++) {
 
 		std::cout << i << " s "<< starting_points[i]->pos().x << " " << starting_points[i]->pos().y << " " << starting_points[i]->pos().z << std::endl;
 		std::cout << i << " e " << ending_points[i]->pos().x << " " << ending_points[i]->pos().y << " " << ending_points[i]->pos().z << std::endl;
 	}
-
-
-	for (auto &h : handlers) {
-		float distance = h.calculate_length();
-		//std::cout << distance << std::endl;
-	}
-
+	*/
 
 	this->update();
-	fish.update_pos(end_of_vein);
+	fish.update_pos(points_for_vein.back());
 }
 
 
@@ -158,17 +174,15 @@ void Fishing_rod::update()
 	this->refresh_pointers();
 
 	//updating rod
-	end_of_rod = *ending_points.back();
-	end_of_vein = end_of_rod + Point(0.0, -150.0, 0.0);
+	points_for_vein.front() = points.back();
+	
 	for (auto i = 0; i < lines.size(); i++) {
 		lines[i].update_position(*starting_points[i], *ending_points[i]);
 	}
-	int j = 1;
-	for (auto i = points.begin(); i != points.end(); i++)
-	{
-		handlers[j++].update_position(handling_point, *i);
-	}
-	vein.update_position(end_of_rod, end_of_vein);
+	//updating vein
+	for (auto i = 0; i < vein.size(); i++) {
+		vein[i].update_position(points_for_vein[i], points_for_vein[i + 1]);
+	}	
 }
 
 
@@ -176,12 +190,8 @@ void Fishing_rod::tension()
 {
 	this->refresh_pointers();
 
-	*ending_points.back() =  end_of_rod + Point(0.0, -100.0, 0.0);
-	for (auto i = 0; i < ending_points.size(); i++) {
-
-		std::cout << i << " s " << starting_points[i]->pos().x << " " << starting_points[i]->pos().y << " " << starting_points[i]->pos().z << std::endl;
-		std::cout << i << " e " << ending_points[i]->pos().x << " " << ending_points[i]->pos().y << " " << ending_points[i]->pos().z << std::endl;
-	}
+	points_for_vein.back() = points_for_vein.back() + Point(0.0, -50.0, 0.0);
+	points_for_vein.back().set_movement(true);
 }
 
 void Fishing_rod::refresh_pointers() 
@@ -204,6 +214,24 @@ void Fishing_rod::refresh_pointers()
 			Point * p1 = &points[i];
 			starting_points.push_back(std::move(p));
 			ending_points.push_back(std::move(p1));
+		}
+	}
+}
+
+void Fishing_rod::move_right()
+{
+	if (points.back().pos().x < 300) {
+		for (auto &p : points) {
+			p.move(ofVec3f(10, 0, 0));
+		}
+	}
+}
+
+void Fishing_rod::move_left()
+{
+	if (points.back().pos().x > -300) {
+		for (auto &p : points) {
+			p.move(ofVec3f(-10, 0, 0));
 		}
 	}
 }

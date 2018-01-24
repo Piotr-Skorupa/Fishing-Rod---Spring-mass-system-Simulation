@@ -25,9 +25,12 @@ public:
 	void update_verlet_method();
 	void change_position(ofVec3f change);
 	void set_force(ofVec3f f);
+	void set_gravity_force(ofVec3f f);
+	void set_forces_to_zero();
 	void set_velocity();
 	void set_movement(bool _move);
-	void set_forces_to_zero();
+	void set_mass(float mass);
+	void move(ofVec3f m_vec);
 	
 	float get_mass();
 	ofVec3f get_v();

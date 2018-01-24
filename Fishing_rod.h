@@ -10,14 +10,15 @@
 
 class Fishing_rod
 {
-	Point end_of_rod;
-	Point end_of_vein;
-	Spring vein;
+	
+	
 	std::vector<Point> points;
 	std::vector<Point*> starting_points;
 	std::vector<Point*> ending_points;
+	std::vector<Point> points_for_vein;
 	std::vector<Spring> lines;
-	Point handling_point;					// punkt do trzymania wedki w stanie rownowagi (sztywnosc wedki)
+	std::vector<Spring> vein;
+						
 	std::vector<Spring> handlers;			// springi do polaczenia handler_pointa z punktami
 	int counter;
 public:
@@ -30,5 +31,7 @@ public:
 	void tension();
 	void update();
 	void refresh_pointers();
+	void move_right();
+	void move_left();
 };
 

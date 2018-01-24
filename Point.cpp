@@ -52,7 +52,10 @@ void Point::change_position(ofVec3f change)
 	position = change;
 }
 
-
+void Point::set_mass(float mass)
+{
+	this->mass = mass;
+}
 
 void Point::update_euler_method()
 {
@@ -80,6 +83,7 @@ void Point::update_verlet_method()
 void Point::set_force(ofVec3f f)
 {
 	force += f;
+	
 }
 
 void Point::set_velocity()
@@ -111,4 +115,14 @@ ofVec3f Point::get_f()
 void Point::set_forces_to_zero()
 {
 	force = { 0,0,0 };
+}
+
+void Point::set_gravity_force(ofVec3f f)
+{
+	force = f;
+}
+
+void Point::move(ofVec3f m_vec)
+{
+	position = position + m_vec;
 }

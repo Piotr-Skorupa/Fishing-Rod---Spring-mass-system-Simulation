@@ -9,6 +9,7 @@ void ofApp::setup(){
 	ofEnableDepthTest();
 	ofSetFrameRate(30);
 	lightVec.set(-3000, 1000, 0);
+	boat_position_x = 0.0; 
 	light.setOrientation(lightVec);
 	light.setDirectional();
 	light.enable();
@@ -16,20 +17,24 @@ void ofApp::setup(){
 	goldfish.load_model("goldfish\\GOLDFISH.3ds", rod.get_hook_point());
 	island.loadModel("background\\3DS\\Tropical Islands.3ds", 20);
 	boat.loadModel("boat\\boat.3ds", 20);
-	boat.setRotation(0, 175, 1, 0, 0);
-	boat.setPosition(-100.0, -100.0, 0.0);
+	boat.setRotation(0, 175, 1, 0, 0); //0, 175, 1, 0, 0
+	boat.setRotation(1, 100, 0, 1, 0);
+	boat.setPosition(boat_position_x, -100.0, 0.0);
 	island.setRotation(0, 180, 1, 0, 0);
 	island.setRotation(1, -5, 0, 1, 0);
 	island.setScale(100.0, 100.0, 100.0);
 	island.setPosition(1600.0, -100.0, 5000.0);
 
 	// screen message
-	msg = "Author: Piotr Skorupa \nTo fullscreen press 'F' \nTo To start simulation press 'KEY_DOWN' \nTo exit press 'Esc'";
+	msg = "Author: Piotr Skorupa \nTo fullscreen press 'F' \nTo start moving boat, use LEFT or RIGHT ARROW  \nTo exit press 'Esc'";
 	msg += "\n\nfps: " + ofToString(ofGetFrameRate(), 2);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	//update boat
+	boat.setPosition(boat_position_x, -100.0, 0.0);
+	//sily sprezystosci
 	rod.update_tension(goldfish);
 }
 
@@ -54,12 +59,23 @@ void ofApp::keyPressed(int key){
 		ofToggleFullscreen();
 		break;
 	case OF_KEY_DOWN:
-		// next fish on rod
-		// play sonund of changing
-		// write on screen the name of fish	
-		
+		// prawdopodobnie jest to funkcja do usuniecia
 		rod.tension();
-		//rod.update();
+		
+		break;
+	case OF_KEY_RIGHT:
+		// move rod right
+		// dodac dzwiek lodki
+		rod.move_right();
+		if (boat_position_x < 125)
+			boat_position_x += 10.0;
+		break;
+	case OF_KEY_LEFT:
+		// move rod left
+		// dodac dzwiek lodki
+		rod.move_left();
+		if(boat_position_x > - 475)
+		boat_position_x -= 10.0;
 		break;
 	}
 

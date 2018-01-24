@@ -34,6 +34,7 @@ class ofApp : public ofBaseApp{
 		Fishing_rod rod;
 		Fish goldfish;
 		ofVec3f lightVec;
+		float boat_position_x;
 		ofxAssimpModelLoader island;
 		ofxAssimpModelLoader boat;
 		std::string msg;
