@@ -67,11 +67,11 @@ void Spring::change_color(bool _if)
 	switch (_if)
 	{
 	case true:
-		spring_color = ofColor(160, 160, 160);     //kolor zylki
+		spring_color = ofColor(160, 160, 160);     //color of fishing vein
 		is_vein = true;
 		break;
 	case false:
-		spring_color = ofColor(255, 185, 0);       // powrot do koloru pierwotnego (wedzisko)
+		spring_color = ofColor(255, 185, 0);       // color of rod (wood)
 		is_vein = false;
 		break;
 	}

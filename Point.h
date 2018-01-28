@@ -19,8 +19,8 @@ public:
 	Point(float x, float y, float z);
 	~Point();
 
-	ofVec3f pos();
-	ofVec3f operator+ (Point that);
+	ofVec3f pos();                                    // return position
+	ofVec3f operator+ (Point that);                   // adding positions of two points
 	void update_euler_method();
 	void update_verlet_method();
 	void change_position(ofVec3f change);

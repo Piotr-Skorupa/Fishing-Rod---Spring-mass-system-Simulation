@@ -14,6 +14,8 @@ void ofApp::setup(){
 	light.setDirectional();
 	light.enable();
 	rod = Fishing_rod();
+
+	// setting 3d models
 	goldfish.load_model("goldfish\\GOLDFISH.3ds", rod.get_hook_point());
 	island.loadModel("background\\3DS\\Tropical Islands.3ds", 20);
 	boat.loadModel("boat\\boat.3ds", 20);
@@ -58,21 +60,14 @@ void ofApp::keyPressed(int key){
 	case 'f':
 		ofToggleFullscreen();
 		break;
-	case OF_KEY_DOWN:
-		// prawdopodobnie jest to funkcja do usuniecia
-		rod.tension();
-		
-		break;
 	case OF_KEY_RIGHT:
 		// move rod right
-		// dodac dzwiek lodki
 		rod.move_right();
 		if (boat_position_x < 125)
 			boat_position_x += 10.0;
 		break;
 	case OF_KEY_LEFT:
 		// move rod left
-		// dodac dzwiek lodki
 		rod.move_left();
 		if(boat_position_x > - 475)
 		boat_position_x -= 10.0;

@@ -19,8 +19,10 @@ class Fishing_rod
 	std::vector<Spring> lines;
 	std::vector<Spring> vein;
 						
-	std::vector<Spring> handlers;			// springi do polaczenia handler_pointa z punktami
+	ofVec3f gravity_force;
+	float moving_force;
 	int counter;
+	bool key_pressed;
 public:
 	Fishing_rod();
 	~Fishing_rod();
@@ -28,7 +30,6 @@ public:
 
 	void draw();
 	void update_tension(Fish &fish);
-	void tension();
 	void update();
 	void refresh_pointers();
 	void move_right();
